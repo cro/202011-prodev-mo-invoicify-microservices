@@ -5,7 +5,11 @@ job "nginx" {
 
   group "nginx-service" {
     count = 1
-
+    volume "nginxvol" {
+      type      = "host"
+      read_only = false
+      source    = "nginxvol"
+    }
     network {
       port "http" {
         to = 80
@@ -36,6 +40,11 @@ job "nginx" {
         memory = 256 # 256MB
       }
 
+      volume_mount {
+        volume      = "nginxvol"
+        destination = "/usr/share/nginx/html"
+        read_only   = false
+      }
       env {
         PG_USER = "invoicify_dev"
         PG_PASSWORD = "password"
